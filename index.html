@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .login-container input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .login-container button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .login-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .error-msg {
+            color: #f44336;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .app-container {
+            display: none;
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .app-container h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .api-key-section {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        
+        .api-key-section h3 {
+            color: #1976d2;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .api-key-section input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #2196F3;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .start-point {
+            background-color: #e8f5e9;
+        }
+        
+        .optional-label {
+            color: #999;
+            font-weight: normal;
+            font-size: 12px;
+        }
+        
+        .add-button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .add-button:hover {
+            background: #45a049;
+        }
+        
+        .add-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .route-list {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .route-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .route-item.start {
+            background: #e8f5e9;
+            border-left-color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        .google-link {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: #4285F4;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .google-link:hover {
+            background: #357ae8;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #856404;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .error-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #c62828;
+            display: none;
+        }
+        
+        .error-box.show {
+            display: block;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <h1>🔐 Access Required</h1>
+        <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off">
+        <button onclick="checkPassword()">Enter</button>
+        <div class="error-msg" id="errorMsg">Incorrect password</div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        
+        <h1>🗺️ Route Planner</h1>
+        <p class="subtitle">Optimize your route</p>
+        
+        <div class="api-key-section">
+            <h3>🔑 API Configuration</h3>
+            <input type="password" id="apiKey" placeholder="API Key">
+        </div>
+
+        <div class="info-box">
+            ℹ️ Enter start point and at least one destination. Supports both Greek and Greeklish.
+        </div>
+
+        <div class="error-box" id="errorBox"></div>
+        
+        <form id="routeForm">
+            <div class="input-group">
+                <label for="start">🚩 Start Point</label>
+                <input type="text" id="start" class="start-point" placeholder="e.g. Liosion 50, Acharnes" required>
+            </div>
+            
+            <div id="destinations">
+                <div class="input-group">
+                    <label for="dest1">📍 Destination 1</label>
+                    <input type="text" id="dest1" placeholder="e.g. Petras 4, Acharnes" required>
+                </div>
+            </div>
+
+            <button type="button" class="add-button" id="addDestBtn">➕ Add Destination (max 9)</button>
+            
+            <button type="submit">🔍 Calculate Optimal Route</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            ⏳ Calculating optimal route...
+        </div>
+        
+        <div class="result" id="result">
+            <h2>✅ Optimized Route</h2>
+            <div class="route-list" id="routeList"></div>
+            <a href="#" class="google-link" id="googleLink" target="_blank">
+                📱 Open in Google Maps
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const _0x4a2b=['dmFsdWU=','Z2V0SXRlbQ==','c2V0SXRlbQ==','bG9naW5Db250YWluZXI=','YXBwQ29udGFpbmVy','ZXJyb3JNc2c=','ZGlzcGxheQ==','YmxvY2s=','bm9uZQ==','YXBpS2V5','cmVtb3ZlSXRlbQ==','bG9jYXRpb24=','cmVsb2Fk'];(function(_0x3f2a,_0x4a2b5d){const _0x1c4e=function(_0x2d8f){while(--_0x2d8f){_0x3f2a['push'](_0x3f2a['shift']());}};_0x1c4e(++_0x4a2b5d);}(_0x4a2b,0x12c));const _0x1c4e=function(_0x3f2a,_0x4a2b5d){_0x3f2a=_0x3f2a-0x0;let _0x1c4e5d=_0x4a2b[_0x3f2a];if(_0x1c4e['initialized']===undefined){(function(){let _0x2d8f;try{const _0x5a4c=Function('return\x20(function()\x20'+'{}.constructor(\x22return\x20this\x22)(\x20)'+');');_0x2d8f=_0x5a4c();}catch(_0x3e5b){_0x2d8f=window;}const _0x4d2a='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';_0x2d8f['atob']||(_0x2d8f['atob']=function(_0x1a3b){const _0x2c5d=String(_0x1a3b)['replace'](/=+$/,'');let _0x3d4e='';for(let _0x4e5f=0x0,_0x5f6a,_0x6a7b,_0x7b8c=0x0;_0x6a7b=_0x2c5d['charAt'](_0x7b8c++);~_0x6a7b&&(_0x5f6a=_0x4e5f%0x4?_0x5f6a*0x40+_0x6a7b:_0x6a7b,_0x4e5f++%0x4)?_0x3d4e+=String['fromCharCode'](0xff&_0x5f6a>>(-0x2*_0x4e5f&0x6)):0x0){_0x6a7b=_0x4d2a['indexOf'](_0x6a7b);}return _0x3d4e;});}());_0x1c4e['decode']=function(_0x8c9d){const _0x9dae=atob(_0x8c9d);let _0xaebf='';for(let _0xbfc0=0x0,_0xc0d1=_0x9dae['length'];_0xbfc0<_0xc0d1;_0xbfc0++){_0xaebf+='%'+('00'+_0x9dae['charCodeAt'](_0xbfc0)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0xaebf);};_0x1c4e['data']={};_0x1c4e['initialized']=!![];}const _0xd1e2=_0x1c4e['data'][_0x3f2a];if(_0xd1e2===undefined){_0x1c4e5d=_0x1c4e['decode'](_0x1c4e5d);_0x1c4e['data'][_0x3f2a]=_0x1c4e5d;}else{_0x1c4e5d=_0xd1e2;}return _0x1c4e5d;};const CORRECT_PASS=atob('cm91dGVfYWRtaW4yMDI1');function checkPassword(){const _0x5d3a=document[getElementById](_0x1c4e('0x0'));const _0x6e4b=document[getElementById](_0x1c4e('0x1'));const _0x7f5c=document[getElementById](_0x1c4e('0x2'));if(_0x5d3a[_0x1c4e('0x3')]===CORRECT_PASS){localStorage[_0x1c4e('0x5')]('auth','true');_0x5d3a[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x8');_0x6e4b[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x9');loadApiKey();}else{_0x7f5c[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x9');}}function logout(){localStorage[_0x1c4e('0xa')]('auth');localStorage[_0x1c4e('0xa')](_0x1c4e('0xb'));window[_0x1c4e('0xc')][_0x1c4e('0xd')]();}function loadApiKey(){const _0x8a9b=localStorage[_0x1c4e('0x4')](_0x1c4e('0xb'));if(_0x8a9b){document[getElementById](_0x1c4e('0xb'))[_0x1c4e('0x3')]=_0x8a9b;}}window.onload=function(){if(localStorage[_0x1c4e('0x4')]('auth')==='true'){document[getElementById](_0x1c4e('0x0'))[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x8');document[getElementById](_0x1c4e('0x1'))[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x9');loadApiKey();}};
+
+        // Password: route_admin2025
+
+        let destCount = 1;
+        const maxDestinations = 9;
+
+        document.getElementById('addDestBtn').addEventListener('click', function() {
+            if (destCount >= maxDestinations) return;
+            
+            destCount++;
+            const destContainer = document.getElementById('destinations');
+            
+            const newDestGroup = document.createElement('div');
+            newDestGroup.className = 'input-group';
+            newDestGroup.id = `destGroup${destCount}`;
+            newDestGroup.innerHTML = `
+                <label for="dest${destCount}">📍 Destination ${destCount} <span class="optional-label">(optional)</span></label>
+                <input type="text" id="dest${destCount}" placeholder="e.g. Syntagma Square">
+            `;
+            
+            destContainer.appendChild(newDestGroup);
+            
+            if (destCount >= maxDestinations) {
+                this.disabled = true;
+                this.textContent = '✓ Maximum destinations (9)';
+            }
+        });
+
+        document.getElementById('apiKey').addEventListener('change', function() {
+            localStorage.setItem('savedApiKey', this.value);
+        });
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                     Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        async function geocodeAddress(address, apiKey) {
+            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&region=gr&key=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.status === 'OK' && data.results.length > 0) {
+                    const result = data.results[0];
+                    return {
+                        lat: result.geometry.location.lat,
+                        lon: result.geometry.location.lng,
+                        formatted_address: result.formatted_address,
+                        original: address
+                    };
+                } else if (data.status === 'REQUEST_DENIED') {
+                    throw new Error('API Key incorrect or Geocoding API not enabled');
+                } else {
+                    console.warn(`Not found: ${address}`);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                throw error;
+            }
+        }
+
+        async function getDistanceMatrix(origins, destinations, apiKey) {
+            const originsStr = origins.map(o => `${o.lat},${o.lon}`).join('|');
+            const destsStr = destinations.map(d => `${d.lat},${d.lon}`).join('|');
+            
+            const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${originsStr}&destinations=${destsStr}&mode=driving&key=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.status === 'OK') {
+                    return data;
+                }
+                throw new Error('Distance Matrix API error');
+            } catch (error) {
+                console.error('Distance Matrix error:', error);
+                return null;
+            }
+        }
+        
+        function optimizeRoute(start, destinations) {
+            const route = [start];
+            const unvisited = [...destinations];
+            let current = start;
+            
+            while (unvisited.length > 0) {
+                let nearest = null;
+                let minDistance = Infinity;
+                let nearestIndex = -1;
+                
+                for (let i = 0; i < unvisited.length; i++) {
+                    const distance = calculateDistance(
+                        current.lat, current.lon,
+                        unvisited[i].lat, unvisited[i].lon
+                    );
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearest = unvisited[i];
+                        nearestIndex = i;
+                    }
+                }
+                
+                route.push(nearest);
+                current = nearest;
+                unvisited.splice(nearestIndex, 1);
+            }
+            
+            return route;
+        }
+        
+        function createGoogleMapsUrl(route) {
+            const origin = route[0].original;
+            const destination = route[route.length - 1].original;
+            const waypoints = route.slice(1, -1).map(point => point.original).join('|');
+            
+            let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+            
+            if (waypoints) {
+                url += `&waypoints=${encodeURIComponent(waypoints)}`;
+            }
+            
+            url += '&travelmode=driving';
+            
+            return url;
+        }
+
+        function showError(message) {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.textContent = '❌ ' + message;
+            errorBox.classList.add('show');
+        }
+
+        function hideError() {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.classList.remove('show');
+        }
+        
+        document.getElementById('routeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            const apiKey = document.getElementById('apiKey').value.trim();
+
+            hideError();
+            
+            if (!apiKey) {
+                showError('Please enter your Google Maps API Key!');
+                return;
+            }
+
+            loading.classList.add('show');
+            result.classList.remove('show');
+            
+            try {
+                const startAddress = document.getElementById('start').value.trim();
+                if (!startAddress) {
+                    throw new Error('Start point is required!');
+                }
+
+                const addresses = [startAddress];
+                
+                for (let i = 1; i <= destCount; i++) {
+                    const destInput = document.getElementById('dest' + i);
+                    if (destInput && destInput.value.trim()) {
+                        addresses.push(destInput.value.trim());
+                    }
+                }
+                
+                if (addresses.length < 2) {
+                    throw new Error('You need at least 1 destination besides the start point!');
+                }
+
+                console.log('Addresses:', addresses);
+                
+                const locations = [];
+                for (const addr of addresses) {
+                    const location = await geocodeAddress(addr, apiKey);
+                    if (location) {
+                        locations.push(location);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                if (locations.length < 2) {
+                    throw new Error('Could not find enough valid addresses. Try more specific addresses (e.g. add city name).');
+                }
+                
+                console.log('Found:', locations);
+                
+                const start = locations[0];
+                const destinations = locations.slice(1);
+                const optimizedRoute = optimizeRoute(start, destinations);
+                
+                const routeList = document.getElementById('routeList');
+                routeList.innerHTML = '';
+                
+                optimizedRoute.forEach((point, index) => {
+                    const div = document.createElement('div');
+                    div.className = index === 0 ? 'route-item start' : 'route-item';
+                    div.innerHTML = `
+                        <strong>${index === 0 ? '🚩 Start' : '📍 Stop ' + index}:</strong><br>
+                        ${point.original}<br>
+                        <small style="color: #666;">${point.formatted_address}</small>
+                    `;
+                    routeList.appendChild(div);
+                });
+                
+                const googleUrl = createGoogleMapsUrl(optimizedRoute);
+                document.getElementById('googleLink').href = googleUrl;
+                
+                loading.classList.remove('show');
+                result.classList.add('show');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'An error occurred while calculating the route!');
+                loading.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
+---
+
+## 🔐 **PASSWORD:**
+```
+route_admin2025
