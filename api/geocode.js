@@ -1,7 +1,7 @@
 // Serverless function for geocoding addresses
 // This keeps the API key secure on the server side
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -44,4 +44,4 @@ export default async function handler(req, res) {
     console.error('Geocoding error:', error);
     return res.status(500).json({ error: 'Failed to geocode address' });
   }
-}
+};
