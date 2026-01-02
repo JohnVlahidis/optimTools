@@ -390,10 +390,15 @@
             window.location.reload();
         }
 
+        const DEFAULT_API_KEY = 'AIzaSyB1PC6uMKkLaGudhM8BfL6tqhTRja9fCvA';
+
         function loadApiKey() {
             const saved = localStorage.getItem('savedApiKey');
             if (saved) {
                 document.getElementById('apiKey').value = saved;
+            } else {
+                document.getElementById('apiKey').value = DEFAULT_API_KEY;
+                localStorage.setItem('savedApiKey', DEFAULT_API_KEY);
             }
         }
 
