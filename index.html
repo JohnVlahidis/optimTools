@@ -85,6 +85,7 @@
             padding: 30px;
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
         }
         
         .app-container h1 {
@@ -365,9 +366,44 @@
     </div>
     
     <script>
-        const _0x4a2b=['dmFsdWU=','Z2V0SXRlbQ==','c2V0SXRlbQ==','bG9naW5Db250YWluZXI=','YXBwQ29udGFpbmVy','ZXJyb3JNc2c=','ZGlzcGxheQ==','YmxvY2s=','bm9uZQ==','YXBpS2V5','cmVtb3ZlSXRlbQ==','bG9jYXRpb24=','cmVsb2Fk'];(function(_0x3f2a,_0x4a2b5d){const _0x1c4e=function(_0x2d8f){while(--_0x2d8f){_0x3f2a['push'](_0x3f2a['shift']());}};_0x1c4e(++_0x4a2b5d);}(_0x4a2b,0x12c));const _0x1c4e=function(_0x3f2a,_0x4a2b5d){_0x3f2a=_0x3f2a-0x0;let _0x1c4e5d=_0x4a2b[_0x3f2a];if(_0x1c4e['initialized']===undefined){(function(){let _0x2d8f;try{const _0x5a4c=Function('return\x20(function()\x20'+'{}.constructor(\x22return\x20this\x22)(\x20)'+');');_0x2d8f=_0x5a4c();}catch(_0x3e5b){_0x2d8f=window;}const _0x4d2a='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';_0x2d8f['atob']||(_0x2d8f['atob']=function(_0x1a3b){const _0x2c5d=String(_0x1a3b)['replace'](/=+$/,'');let _0x3d4e='';for(let _0x4e5f=0x0,_0x5f6a,_0x6a7b,_0x7b8c=0x0;_0x6a7b=_0x2c5d['charAt'](_0x7b8c++);~_0x6a7b&&(_0x5f6a=_0x4e5f%0x4?_0x5f6a*0x40+_0x6a7b:_0x6a7b,_0x4e5f++%0x4)?_0x3d4e+=String['fromCharCode'](0xff&_0x5f6a>>(-0x2*_0x4e5f&0x6)):0x0){_0x6a7b=_0x4d2a['indexOf'](_0x6a7b);}return _0x3d4e;});}());_0x1c4e['decode']=function(_0x8c9d){const _0x9dae=atob(_0x8c9d);let _0xaebf='';for(let _0xbfc0=0x0,_0xc0d1=_0x9dae['length'];_0xbfc0<_0xc0d1;_0xbfc0++){_0xaebf+='%'+('00'+_0x9dae['charCodeAt'](_0xbfc0)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0xaebf);};_0x1c4e['data']={};_0x1c4e['initialized']=!![];}const _0xd1e2=_0x1c4e['data'][_0x3f2a];if(_0xd1e2===undefined){_0x1c4e5d=_0x1c4e['decode'](_0x1c4e5d);_0x1c4e['data'][_0x3f2a]=_0x1c4e5d;}else{_0x1c4e5d=_0xd1e2;}return _0x1c4e5d;};const CORRECT_PASS=atob('cm91dGVfYWRtaW4yMDI1');function checkPassword(){const _0x5d3a=document[getElementById](_0x1c4e('0x0'));const _0x6e4b=document[getElementById](_0x1c4e('0x1'));const _0x7f5c=document[getElementById](_0x1c4e('0x2'));if(_0x5d3a[_0x1c4e('0x3')]===CORRECT_PASS){localStorage[_0x1c4e('0x5')]('auth','true');_0x5d3a[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x8');_0x6e4b[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x9');loadApiKey();}else{_0x7f5c[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x9');}}function logout(){localStorage[_0x1c4e('0xa')]('auth');localStorage[_0x1c4e('0xa')](_0x1c4e('0xb'));window[_0x1c4e('0xc')][_0x1c4e('0xd')]();}function loadApiKey(){const _0x8a9b=localStorage[_0x1c4e('0x4')](_0x1c4e('0xb'));if(_0x8a9b){document[getElementById](_0x1c4e('0xb'))[_0x1c4e('0x3')]=_0x8a9b;}}window.onload=function(){if(localStorage[_0x1c4e('0x4')]('auth')==='true'){document[getElementById](_0x1c4e('0x0'))[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x8');document[getElementById](_0x1c4e('0x1'))[_0x1c4e('0x6')][_0x1c4e('0x7')]=_0x1c4e('0x9');loadApiKey();}};
+        const CORRECT_PASS = 'route_admin2025';
 
-        // Password: route_admin2025
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const loginCont = document.getElementById('loginContainer');
+            const appCont = document.getElementById('appContainer');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input.value === CORRECT_PASS) {
+                localStorage.setItem('auth', 'true');
+                loginCont.style.display = 'none';
+                appCont.style.display = 'block';
+                loadApiKey();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('auth');
+            localStorage.removeItem('savedApiKey');
+            window.location.reload();
+        }
+
+        function loadApiKey() {
+            const saved = localStorage.getItem('savedApiKey');
+            if (saved) {
+                document.getElementById('apiKey').value = saved;
+            }
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('auth') === 'true') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                loadApiKey();
+            }
+        };
 
         let destCount = 1;
         const maxDestinations = 9;
@@ -433,26 +469,6 @@
             } catch (error) {
                 console.error('Geocoding error:', error);
                 throw error;
-            }
-        }
-
-        async function getDistanceMatrix(origins, destinations, apiKey) {
-            const originsStr = origins.map(o => `${o.lat},${o.lon}`).join('|');
-            const destsStr = destinations.map(d => `${d.lat},${d.lon}`).join('|');
-            
-            const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${originsStr}&destinations=${destsStr}&mode=driving&key=${apiKey}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.status === 'OK') {
-                    return data;
-                }
-                throw new Error('Distance Matrix API error');
-            } catch (error) {
-                console.error('Distance Matrix error:', error);
-                return null;
             }
         }
         
@@ -599,10 +615,3 @@
     </script>
 </body>
 </html>
-```
-
----
-
-## 🔐 **PASSWORD:**
-```
-route_admin2025
